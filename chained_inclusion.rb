@@ -1,0 +1,44 @@
+module SecondLevelModule
+  def self.included(base)
+    puts "#{self} included by #{base}"
+    base.extend ClassMethods
+  end
+
+  def second_level_instance_method; 'ok'; end
+
+  module ClassMethods
+    def self.extended(base)
+      puts "#{self} extended by #{base}"
+    end
+    def second_level_class_method; 'ok'; end
+  end
+
+end
+
+module FirstLevelModule
+  def self.included(base)
+    puts "#{self} included by #{base}"
+    base.extend ClassMethods
+    # base.send :include, SecondLevelModule
+  end
+
+  def first_level_instance_method; 'ok'; end
+
+  module ClassMethods
+    def self.extended(base)
+      puts "#{self} extended by #{base}"
+    end
+    def first_level_class_method; 'ok'; end
+  end
+
+  # include SecondLevelModule
+end
+
+class BaseClass
+  include FirstLevelModule
+end
+
+p BaseClass.new.first_level_instance_method
+# p BaseClass.new.second_level_instance_method
+p BaseClass.first_level_class_method
+# p BaseClass.second_level_instance_method
